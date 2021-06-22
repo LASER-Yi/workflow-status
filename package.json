@@ -12,7 +12,8 @@
     "url": "git+https://github.com/LASER-Yi/validate-workflow-status.git"
   },
   "keywords": [
-    "Github Action"
+    "actions",
+    "node"
   ],
   "author": "LASER-Yi",
   "license": "MIT",

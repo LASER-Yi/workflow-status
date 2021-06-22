@@ -18,9 +18,9 @@ jobs:
         id: "check-success"
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: "always-success"
+          workflow: "success.yml"
       - uses: ./
         id: "check-failed"
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: "always-failed"
+          workflow: "failed.yml"

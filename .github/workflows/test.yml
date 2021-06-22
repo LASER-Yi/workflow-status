@@ -24,3 +24,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           workflow: "failed.yml"
+      - name: Validate Result (If Statement)
+        if: ${{ steps.check-success.outputs.conclusion == 'success' && steps.check-failed.outputs.conclusion == 'failure'}}
+        run: exit 0
+      - name: Validate Result (Shell)
+        run: |
+          if [ '${{ steps.check-success.outputs.conclusion }}' == 'success' -a '${{ steps.check-failed.outputs.conclusion }}' == 'failure' ]; then
+            exit 0
+          else
+            exit 1
+          fi

@@ -31,7 +31,7 @@ export function getOwnerAndRepo(full: string): [string, string] {
 }
 
 export function getFirst<T>(arr: T[]): T | null {
-  if (arr.length > 1) {
+  if (arr.length >= 1) {
     return arr[0];
   } else {
     return null;

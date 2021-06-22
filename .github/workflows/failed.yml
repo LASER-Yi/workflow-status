@@ -6,7 +6,7 @@ on:
       - .github/workflows/failed.yml
 
 jobs:
-  success:
+  failed:
     runs-on: ubuntu-latest
     steps:
       - run: exit 1

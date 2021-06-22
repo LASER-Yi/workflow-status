@@ -8,9 +8,9 @@ export function logWarning(msg: string) {
 export function getOptionalInput(
   name: string,
   options?: core.InputOptions
-): string | null {
+): string | undefined {
   const value = core.getInput(name, options);
-  return value.length === 0 ? null : value;
+  return value.length === 0 ? undefined : value;
 }
 
 export function getRepository(): string {

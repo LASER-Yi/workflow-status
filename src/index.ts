@@ -13,8 +13,9 @@ async function run(): Promise<void> {
     const token = core.getInput('token', {required: true});
     const workflow = core.getInput('workflow', {required: true});
     const branch = core.getInput('branch');
+    const event = getOptionalInput('event')
     let fullRepo = getOptionalInput('repo');
-    if (fullRepo === null) {
+    if (fullRepo === undefined) {
       fullRepo = getRepository();
     }
 
@@ -28,8 +29,8 @@ async function run(): Promise<void> {
       repo,
       workflow_id: workflow,
       branch,
+      event,
       per_page: 1,
-      page: 1
     });
 
     const latest = getFirst(workflow_runs);

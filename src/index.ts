@@ -21,6 +21,8 @@ async function run(): Promise<void> {
 
     const [owner, repo] = getOwnerAndRepo(fullRepo);
 
+    core.info(`Checking ${workflow}'s result from ${fullRepo}:${branch}`)
+
     const octokit = github.getOctokit(token);
     const {
       data: {workflow_runs}
@@ -36,7 +38,9 @@ async function run(): Promise<void> {
     const latest = getFirst(workflow_runs);
 
     if (latest !== null) {
-      core.info(`status: ${latest.status} conclusion: ${latest.conclusion}`);
+      core.info(`status: ${latest.status}`);
+      core.info(`conclusion: ${latest.conclusion}`)
+
       core.setOutput('status', latest.status);
       core.setOutput('conclusion', latest.conclusion);
     } else {

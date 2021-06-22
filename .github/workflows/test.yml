@@ -1,0 +1,26 @@
+name: 'build-test'
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install
+      - run: npm run build
+      # Currently we don't want to commit dist folder
+      - uses: ./
+        id: "check-success"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: "always-success"
+      - uses: ./
+        id: "check-failed"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: "always-failed"

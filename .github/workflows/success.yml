@@ -1,0 +1,12 @@
+name: 'always-success'
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/success.yml
+
+jobs:
+  success:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0

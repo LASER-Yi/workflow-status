@@ -4,6 +4,16 @@ inputs:
   token:
     description: 'GITHUB_TOKEN'
     required: true
+  workflow:
+    description: 'The name of workflow'
+    required: true
+  repo:
+    description: 'The repo that contains workflow'
+    required: false
+  branch:
+    description: 'The branch to validate'
+    required: false
+    default: main
 outputs:
   status:
     description: 'Workflow status'

@@ -4,7 +4,7 @@
   "description": "A Github Action that validates another workflow's latest status",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && ncc build -o dist src/index.ts",
+    "build": "ncc build -o dist src/index.ts",
     "format": "prettier --write **/*.ts"
   },
   "repository": {

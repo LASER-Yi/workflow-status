@@ -1,0 +1,14 @@
+name: 'Validate Workflow Status'
+description: 'Validates another workflow's latest status'
+inputs:
+  token:
+    description: 'GITHUB_TOKEN'
+    required: true
+outputs:
+  status:
+    description: 'Workflow status'
+  conclusion:
+    description: 'Workflow conclusion'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

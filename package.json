@@ -1,0 +1,33 @@
+{
+  "name": "validate-workflow-status",
+  "version": "0.0.1",
+  "description": "A Github Action that validates another workflow's latest status",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && ncc build -o dist src/index.ts",
+    "format": "prettier --write **/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LASER-Yi/validate-workflow-status.git"
+  },
+  "keywords": [
+    "Github Action"
+  ],
+  "author": "LASER-Yi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LASER-Yi/validate-workflow-status/issues"
+  },
+  "homepage": "https://github.com/LASER-Yi/validate-workflow-status#readme",
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "@actions/github": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4",
+    "prettier": "^2",
+    "@types/node": "^12",
+    "@zeit/ncc": "^0"
+  }
+}

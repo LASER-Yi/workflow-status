@@ -1,5 +1,5 @@
 name: 'Validate Workflow Status'
-description: 'Validates another workflow's latest status'
+description: "Validates another workflow's latest status"
 inputs:
   token:
     description: 'GITHUB_TOKEN'

@@ -1,5 +1,5 @@
 {
-  "name": "validate-workflow-status",
+  "name": "workflow-status",
   "version": "0.0.1",
   "description": "A Github Action that validates another workflow's latest status",
   "main": "dist/index.js",

@@ -1,5 +1,8 @@
 name: Workflow Status
 description: Validates another workflow's latest status
+branding:
+  icon: check-circle
+  color: blue
 inputs:
   token:
     description: 'GITHUB_TOKEN'

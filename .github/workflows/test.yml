@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - 'releases/*'
+    paths:
+      - "**.ts"
+      - "**.json"
+      - ".github/workflows/test.yml"
 
 jobs:
   build:

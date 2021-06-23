@@ -24,6 +24,8 @@ jobs:
       - name: Install Deps
         run: npm install
       - name: Build
-        run: npm run build
+        run: npm run build && git add .
       - name: Release
-        run: npm run release -- --ci --increment ${{ github.event.inputs.increment }}
+        run: |
+          git config --global user.name "github-actions"
+          npm run release -- --ci --increment ${{ github.event.inputs.increment }}

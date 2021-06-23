@@ -1,0 +1,27 @@
+name: 'release-version'
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: "Increment Type (major, minor, patch)"
+        required: true
+        default: "patch"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+      - name: Install Deps
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Release
+        run: npm release -- --ci --increment ${{ github.event.inputs.increment }}

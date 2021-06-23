@@ -24,4 +24,4 @@ jobs:
       - name: Build
         run: npm run build
       - name: Release
-        run: npm release -- --ci --increment ${{ github.event.inputs.increment }}
+        run: npm run release -- --ci --increment ${{ github.event.inputs.increment }}

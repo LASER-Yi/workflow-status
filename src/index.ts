@@ -21,7 +21,7 @@ async function run(): Promise<void> {
 
     const [owner, repo] = getOwnerAndRepo(fullRepo);
 
-    core.info(`Checking ${workflow}'s result from ${fullRepo}:${branch}`)
+    core.info(`Checking result of ${workflow} from ${fullRepo}:${branch}`);
 
     const octokit = github.getOctokit(token);
     const {

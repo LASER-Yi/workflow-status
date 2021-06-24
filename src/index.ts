@@ -5,7 +5,8 @@ import {
   getOptionalInput,
   getOwnerAndRepo,
   getRepository,
-  logWarning
+  logWarning,
+  waitTime
 } from './utils';
 
 async function run(): Promise<void> {
@@ -13,7 +14,8 @@ async function run(): Promise<void> {
     const token = core.getInput('token', {required: true});
     const workflow = core.getInput('workflow', {required: true});
     const branch = core.getInput('branch');
-    const event = getOptionalInput('event')
+    const event = getOptionalInput('event');
+    const wait = core.getBooleanInput('wait');
     let fullRepo = getOptionalInput('repo');
     if (fullRepo === undefined) {
       fullRepo = getRepository();
@@ -24,25 +26,39 @@ async function run(): Promise<void> {
     core.info(`Checking result of ${workflow} from ${fullRepo}:${branch}`);
 
     const octokit = github.getOctokit(token);
-    const {
-      data: {workflow_runs}
-    } = await octokit.rest.actions.listWorkflowRuns({
-      owner,
-      repo,
-      workflow_id: workflow,
-      branch,
-      event,
-      per_page: 1,
-    });
 
-    const latest = getFirst(workflow_runs);
+    let status: string | null = null;
+    let conclusion: string | null = null;
 
-    if (latest !== null) {
-      core.info(`status: ${latest.status}`);
-      core.info(`conclusion: ${latest.conclusion}`)
+    do {
+      const {
+        data: {workflow_runs}
+      } = await octokit.rest.actions.listWorkflowRuns({
+        owner,
+        repo,
+        workflow_id: workflow,
+        branch,
+        event,
+        per_page: 1
+      });
 
-      core.setOutput('status', latest.status);
-      core.setOutput('conclusion', latest.conclusion);
+      const latest = getFirst(workflow_runs);
+
+      status = latest?.status ?? null;
+      conclusion = latest?.conclusion ?? null;
+
+      if (wait && status !== 'completed') {
+        await waitTime(5 * 1000);
+        continue;
+      }
+    } while (false);
+
+    if (status !== null && conclusion !== null) {
+      core.info(`status: ${status}`);
+      core.info(`conclusion: ${conclusion}`);
+
+      core.setOutput('status', status);
+      core.setOutput('conclusion', conclusion);
     } else {
       logWarning('Workflow run is missing');
     }

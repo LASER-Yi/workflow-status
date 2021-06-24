@@ -20,6 +20,10 @@ inputs:
   event:
     description: 'The event to validate'
     required: false
+  wait:
+    description: 'Wait until workflow completed'
+    required: false
+    default: false
 outputs:
   status:
     description: 'Workflow status'

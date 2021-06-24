@@ -37,3 +37,13 @@ export function getFirst<T>(arr: T[]): T | null {
     return null;
   }
 }
+
+export async function waitTime(milliseconds: number): Promise<void> {
+  return new Promise(resolve => {
+    if (isNaN(milliseconds)) {
+      throw new Error('milliseconds is not a number');
+    }
+
+    setTimeout(() => resolve(), milliseconds);
+  });
+}

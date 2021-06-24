@@ -582,8 +582,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFirst = exports.getOwnerAndRepo = exports.getRepository = exports.getOptionalInput = exports.logWarning = void 0;
+exports.waitTime = exports.getFirst = exports.getOwnerAndRepo = exports.getRepository = exports.getOptionalInput = exports.logWarning = void 0;
 const core = __importStar(__webpack_require__(470));
 const constants_1 = __webpack_require__(694);
 function logWarning(msg) {
@@ -620,6 +629,17 @@ function getFirst(arr) {
     }
 }
 exports.getFirst = getFirst;
+function waitTime(milliseconds) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise(resolve => {
+            if (isNaN(milliseconds)) {
+                throw new Error('milliseconds is not a number');
+            }
+            setTimeout(() => resolve(), milliseconds);
+        });
+    });
+}
+exports.waitTime = waitTime;
 
 
 /***/ }),
@@ -989,33 +1009,45 @@ const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
 const utils_1 = __webpack_require__(163);
 function run() {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token', { required: true });
             const workflow = core.getInput('workflow', { required: true });
             const branch = core.getInput('branch');
             const event = utils_1.getOptionalInput('event');
+            const wait = core.getBooleanInput('wait');
             let fullRepo = utils_1.getOptionalInput('repo');
             if (fullRepo === undefined) {
                 fullRepo = utils_1.getRepository();
             }
             const [owner, repo] = utils_1.getOwnerAndRepo(fullRepo);
-            core.info(`Checking ${workflow}'s result from ${fullRepo}:${branch}`);
+            core.info(`Checking result of ${workflow} from ${fullRepo}:${branch}`);
             const octokit = github.getOctokit(token);
-            const { data: { workflow_runs } } = yield octokit.rest.actions.listWorkflowRuns({
-                owner,
-                repo,
-                workflow_id: workflow,
-                branch,
-                event,
-                per_page: 1,
-            });
-            const latest = utils_1.getFirst(workflow_runs);
-            if (latest !== null) {
-                core.info(`status: ${latest.status}`);
-                core.info(`conclusion: ${latest.conclusion}`);
-                core.setOutput('status', latest.status);
-                core.setOutput('conclusion', latest.conclusion);
+            let status = null;
+            let conclusion = null;
+            do {
+                const { data: { workflow_runs } } = yield octokit.rest.actions.listWorkflowRuns({
+                    owner,
+                    repo,
+                    workflow_id: workflow,
+                    branch,
+                    event,
+                    per_page: 1
+                });
+                const latest = utils_1.getFirst(workflow_runs);
+                status = (_a = latest === null || latest === void 0 ? void 0 : latest.status) !== null && _a !== void 0 ? _a : null;
+                conclusion = (_b = latest === null || latest === void 0 ? void 0 : latest.conclusion) !== null && _b !== void 0 ? _b : null;
+                if (wait && status !== 'completed') {
+                    yield utils_1.waitTime(5 * 1000);
+                    continue;
+                }
+            } while (false);
+            if (status !== null && conclusion !== null) {
+                core.info(`status: ${status}`);
+                core.info(`conclusion: ${conclusion}`);
+                core.setOutput('status', status);
+                core.setOutput('conclusion', conclusion);
             }
             else {
                 utils_1.logWarning('Workflow run is missing');

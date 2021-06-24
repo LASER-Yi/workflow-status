@@ -15,16 +15,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Cache node_modules
         uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
+
       - name: Install Deps
         run: npm install
+
       - name: Build
         run: npm run build && git add .
+
       - name: Check CI
       	id: check-ci
       	uses: LASER-Yi/workflow-status@main
@@ -32,6 +36,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           workflow: test.yml
           event: push
+          
       - name: Release
         if: ${{ steps.check-ci.outputs.conclusion == 'success' }}
         run: |

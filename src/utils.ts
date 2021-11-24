@@ -30,10 +30,12 @@ export function getOwnerAndRepo(full: string): [string, string] {
   return results as [string, string];
 }
 
-export function getFirst<T>(arr: T[]): T | null {
-  if (arr.length >= 1) {
-    return arr[0];
-  } else {
-    return null;
+export function getFirst<T>(arr: T[], index: number): T | null {
+  for (let i = index; i < arr.length; i++) {
+    let obj = arr[i];
+    if (obj['event'] !== 'pull_request') {
+      return obj;
+    }
   }
+  return null;
 }

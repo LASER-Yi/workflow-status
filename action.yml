@@ -17,6 +17,9 @@ inputs:
   event:
     description: 'The event to validate'
     required: false
+  run:
+    description: 'Can set "first" or "prev", default is "latest"'
+    required: false
 outputs:
   status:
     description: 'Workflow status'

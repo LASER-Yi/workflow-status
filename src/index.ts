@@ -13,7 +13,9 @@ async function run(): Promise<void> {
     const token = core.getInput('token', {required: true});
     const workflow = core.getInput('workflow', {required: true});
     const branch = core.getInput('branch');
-    const event = getOptionalInput('event')
+    const event = getOptionalInput('event');
+    let run = getOptionalInput('run') === undefined ? 0 : parseInt(getOptionalInput('run') as string);
+
     let fullRepo = getOptionalInput('repo');
     if (fullRepo === undefined) {
       fullRepo = getRepository();
@@ -21,7 +23,7 @@ async function run(): Promise<void> {
 
     const [owner, repo] = getOwnerAndRepo(fullRepo);
 
-    core.info(`Checking ${workflow}'s result from ${fullRepo}:${branch}`)
+    core.info(`Checking ${workflow}'s result from ${fullRepo}:${branch} run ${run}`)
 
     const octokit = github.getOctokit(token);
     const {
@@ -32,10 +34,10 @@ async function run(): Promise<void> {
       workflow_id: workflow,
       branch,
       event,
-      per_page: 1,
+      per_page: 3,
     });
-
-    const latest = getFirst(workflow_runs);
+    core.info(`runs ${JSON.stringify(workflow_runs)}`);
+    const latest = getFirst(workflow_runs, run);
 
     if (latest !== null) {
       core.info(`status: ${latest.status}`);

@@ -1,0 +1,23 @@
+name: 'custom'
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    branches:
+      - main
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+#    - run: ччч
+    - name: Check CI
+      id: check-ci
+      uses: KOR-Financial/github-actions-workflow-status@main
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        workflow: custom.yml
+#        event: push, workflow_dispatch
+        branch: main
+        run: 1
+    - name: echo
+      run: echo ${{ steps.check-ci.outputs.status }}

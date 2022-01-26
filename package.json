@@ -29,7 +29,7 @@
   "devDependencies": {
     "typescript": "^4",
     "prettier": "^2",
-    "@types/node": "^16",
+    "@types/node": "^17",
     "@zeit/ncc": "^0",
     "release-it": "*"
   }
